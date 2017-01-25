@@ -19,6 +19,11 @@ android {
     }
 }
 
+ext{
+    retrofitVersions = '2.1.0'
+    supportLibraryVersion = '25.1.0'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -26,4 +31,19 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+
+
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
+
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersions"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersions"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersions"
+
 }
