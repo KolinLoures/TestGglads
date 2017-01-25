@@ -10,4 +10,14 @@
 
     <style name="AppTheme" parent="AppTheme.Base" />
 
+    <style name="primaryTextListItem">
+        <item name="android:fontFamily">@string/Roboto_Medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="supportTextListItem">
+        <item name="android:fontFamily">@string/Roboto_Regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

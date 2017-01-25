@@ -1,9 +1,13 @@
 package com.example.kolin.testgglads.data.net;
 
-import com.example.kolin.testgglads.data.entities.CategoryEntity;
+import com.example.kolin.testgglads.data.entities.ListCategoryEntity;
+import com.example.kolin.testgglads.data.entities.ListPostEntity;
+import com.example.kolin.testgglads.presentation.list.ListAdapter;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -13,6 +17,9 @@ import retrofit2.http.Query;
 public interface Api {
 
     @GET("categories/?")
-    Observable<CategoryEntity> getCategories (@Query("access_token") String token);
+    Observable<ListCategoryEntity> getCategories (@Query("access_token") String token);
 
+    @GET("categories/{category_name}/posts/?")
+    Observable<ListPostEntity> getPosts(@Path("category_name") String categoryName,
+                                        @Query("access_token") String token);
 }

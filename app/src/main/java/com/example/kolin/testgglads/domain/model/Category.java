@@ -8,15 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Category {
 
-    @SerializedName("id")
     private Integer id;
-    @SerializedName("slug")
     private String slug;
-    @SerializedName("name")
     private String name;
-    @SerializedName("color")
     private String color;
-    @SerializedName("item_name")
     private String itemName;
 
     public Integer getId() {
