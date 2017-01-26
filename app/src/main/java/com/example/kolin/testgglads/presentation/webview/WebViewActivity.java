@@ -21,7 +21,7 @@ public class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_view);
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             currentUrl = bundle.getString("url");
             name = bundle.getString("name");
         }
@@ -30,12 +30,21 @@ public class WebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_web_view_toolbar);
         toolbar.setTitle(name);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         webView = (WebView) findViewById(R.id.web_view);
-        setWebViewSettings();
+
+
+        if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState);
+        } else {
+            setWebViewSettings();
+        }
+
+
+
     }
 
     private void setWebViewSettings() {
@@ -47,7 +56,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -55,4 +64,8 @@ public class WebViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        webView.saveState(outState);
+    }
 }

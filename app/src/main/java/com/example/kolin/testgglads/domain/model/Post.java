@@ -3,13 +3,14 @@ package com.example.kolin.testgglads.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by kolin on 25.01.2017.
  */
 
-public class Post implements Parcelable {
+public class Post implements Serializable {
 
     private Integer categoryId;
     private Integer id;
@@ -34,17 +35,6 @@ public class Post implements Parcelable {
         screenshotsUrl = in.createStringArrayList();
     }
 
-    public static final Creator<Post> CREATOR = new Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-            return new Post(in);
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
 
     public Integer getCategoryId() {
         return categoryId;
@@ -116,20 +106,5 @@ public class Post implements Parcelable {
 
     public void setScreenshotsUrl(List<String> screenshotsUrl) {
         this.screenshotsUrl = screenshotsUrl;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(tagLine);
-        dest.writeString(createdAt);
-        dest.writeString(redirectUrl);
-        dest.writeString(thumbnailUrl);
-        dest.writeStringList(screenshotsUrl);
     }
 }

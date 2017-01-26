@@ -92,6 +92,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public List<Post> getPostList() {
+        return postList;
+    }
+
     public void setListener(OnSelectedItemListener listener) {
         this.listener = listener;
     }

@@ -40,4 +40,10 @@ public abstract class AbstractUC<T, P> {
         }
     }
 
+    public void clearObservers(){
+        if (!compositeDisposable.isDisposed()){
+            compositeDisposable.clear();
+        }
+    }
+
 }

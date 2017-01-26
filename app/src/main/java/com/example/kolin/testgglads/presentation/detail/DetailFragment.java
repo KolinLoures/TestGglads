@@ -25,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 public class DetailFragment extends Fragment {
 
+    public static final String TAG = DetailFragment.class.getSimpleName();
+
     private static final String ARG_KEY = "post_key";
 
     private Post currentPost;
@@ -48,7 +50,7 @@ public class DetailFragment extends Fragment {
     public static DetailFragment newInstance(Post selectedPost) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_KEY, selectedPost);
+        args.putSerializable(ARG_KEY, selectedPost);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +61,7 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            currentPost = arguments.getParcelable(ARG_KEY);
+            currentPost = (Post) arguments.getSerializable(ARG_KEY);
         }
     }
 
@@ -119,6 +121,7 @@ public class DetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                 getActivity().getSupportFragmentManager().popBackStack();
                 break;
         }
@@ -143,5 +146,7 @@ public class DetailFragment extends Fragment {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+
 
 }

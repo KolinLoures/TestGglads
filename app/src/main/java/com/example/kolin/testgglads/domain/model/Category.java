@@ -1,24 +1,33 @@
 package com.example.kolin.testgglads.domain.model;
 
-import com.google.gson.annotations.SerializedName;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 
 /**
  * Created by kolin on 25.01.2017.
  */
 
-public class Category {
+public class Category implements Serializable {
 
-    private Integer id;
+    private int id;
     private String slug;
     private String name;
     private String color;
     private String itemName;
 
-    public Integer getId() {
+    public Category() {
+    }
+
+
+
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

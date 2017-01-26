@@ -3,6 +3,7 @@ package com.example.kolin.testgglads.presentation.list;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,12 +21,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kolin.testgglads.R;
+import com.example.kolin.testgglads.domain.model.Category;
 import com.example.kolin.testgglads.domain.model.Post;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import io.reactivex.internal.util.SuppressAnimalSniffer;
 
 
 public class ListFragment extends Fragment implements ListView {
+
+    public static final String TAG = ListFragment.class.getSimpleName();
+
+    private static final String ARG_LIST = "adapter_list";
+    private static final String ARG_CAT = "array_list_categories";
+    private static final String ARG_SELECT = "current_selection";
 
     private Toolbar toolbar;
     private Spinner spinner;
@@ -36,7 +49,7 @@ public class ListFragment extends Fragment implements ListView {
     private RecyclerView recyclerView;
 
     private OnInteractionListFragmentListener listener;
-    private ArrayAdapter<String> arrayAdapter;
+    private SpinnerCategoryAdapter arrayAdapter;
 
     public ListFragment() {
         // Required empty public constructor
@@ -44,16 +57,17 @@ public class ListFragment extends Fragment implements ListView {
 
 
     public static ListFragment newInstance() {
-        ListFragment fragment = new ListFragment();
-        return fragment;
+        ListFragment listFragment = new ListFragment();
+        return listFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ListAdapter();
-        arrayAdapter = new ArrayAdapter<String>(
-                getContext(), R.layout.support_simple_spinner_dropdown_item);
+
+        arrayAdapter = new SpinnerCategoryAdapter(getContext(), R.layout.item_spinner);
+
         listPresenter = new ListPresenter();
         listPresenter.attacheView(this);
     }
@@ -96,14 +110,13 @@ public class ListFragment extends Fragment implements ListView {
         return view;
     }
 
-
-
     private void setupSwipeContainer() {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 adapter.clear();
-                listPresenter.loadCategoryPost(spinner.getSelectedItemPosition(), true);
+                int pos = spinner.getSelectedItemPosition();
+                listPresenter.loadCategoryPost(arrayAdapter.getItem(pos), true);
             }
         });
 
@@ -117,8 +130,7 @@ public class ListFragment extends Fragment implements ListView {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-//                adapter.clear();
-                listPresenter.loadCategoryPost(position, false);
+                listPresenter.loadCategoryPost(arrayAdapter.getItem(position), false);
             }
 
             @Override
@@ -128,8 +140,26 @@ public class ListFragment extends Fragment implements ListView {
         });
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            int selectedPos = savedInstanceState.getInt(ARG_SELECT);
+            spinner.setSelection(selectedPos);
+
+            List<Category> categoryList = (List<Category>) savedInstanceState.getSerializable(ARG_CAT);
+            arrayAdapter.addAll(categoryList);
+            listPresenter.setCurrentCategoryId(arrayAdapter.getItem(selectedPos).getId());
+
+
+            List<Post> postList = (List<Post>) savedInstanceState.getSerializable(ARG_LIST);
+            if (postList != null && !postList.isEmpty()) {
+                adapter.addAll(postList);
+            } else {
+                listPresenter.loadCategoryPost(arrayAdapter.getItem(selectedPos), true);
+            }
+        }
         if (arrayAdapter.isEmpty()) {
             listPresenter.loadCategories();
         }
@@ -161,17 +191,12 @@ public class ListFragment extends Fragment implements ListView {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDetach() {
         swipeContainer.setOnRefreshListener(null);
         spinner.setOnItemSelectedListener(null);
         spinner.setAdapter(null);
         recyclerView.setAdapter(null);
         adapter.setListener(null);
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDetach() {
         listPresenter.disposeAll();
         listener = null;
         super.onDetach();
@@ -179,9 +204,8 @@ public class ListFragment extends Fragment implements ListView {
 
 
     @Override
-    public void showCategories(List<String> categoryList) {
+    public void showCategories(List<Category> categoryList) {
         arrayAdapter.addAll(categoryList);
-        arrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -202,5 +226,14 @@ public class ListFragment extends Fragment implements ListView {
 
     public interface OnInteractionListFragmentListener {
         void onClick(Post post);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(ARG_LIST, (Serializable) adapter.getPostList());
+        outState.putSerializable(ARG_CAT, (Serializable) arrayAdapter.getCategoryList());
+        outState.putInt(ARG_SELECT, spinner.getSelectedItemPosition());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ListView {
 
-    void showCategories(List<String> categoryList);
+    void showCategories(List<Category> categoryList);
 
     void showPostsCategories(List<Post> postList);
 
