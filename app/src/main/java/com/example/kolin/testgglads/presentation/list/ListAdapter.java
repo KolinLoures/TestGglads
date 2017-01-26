@@ -24,6 +24,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private List<Post> postList = new ArrayList<>();
     private Picasso picasso;
 
+    private OnSelectedItemListener listener;
+
+    public interface OnSelectedItemListener {
+        void onSelectedItem(Post selectedPost);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
@@ -63,6 +69,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             textUpVotes = (TextView) itemView.findViewById(R.id.list_item_votes);
 
             imageView = (CircleImageView) itemView.findViewById(R.id.list_item_thumbnail);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener!=  null){
+                        listener.onSelectedItem(postList.get(getAdapterPosition()));
+                    }
+                }
+            });
         }
     }
 
@@ -71,9 +86,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void addAdll(List<Post> postList){
+    public void addAll(List<Post> postList){
         this.postList.clear();
         this.postList.addAll(postList);
         notifyDataSetChanged();
+    }
+
+    public void setListener(OnSelectedItemListener listener) {
+        this.listener = listener;
     }
 }

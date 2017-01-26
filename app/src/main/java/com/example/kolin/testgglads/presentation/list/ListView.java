@@ -14,4 +14,8 @@ public interface ListView {
     void showCategories(List<String> categoryList);
 
     void showPostsCategories(List<Post> postList);
+
+    void setRefreshing(boolean b);
+
+    void clearResult();
 }

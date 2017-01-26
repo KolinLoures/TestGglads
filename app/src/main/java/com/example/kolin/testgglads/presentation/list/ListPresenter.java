@@ -25,6 +25,8 @@ public class ListPresenter extends AbstractPresenter<ListView> {
     private GetCategoryPostUC getCategoryPostUC;
 
     private List<Category> currentCategories = new ArrayList<>();
+    private List<Post> currentPosts = new ArrayList<>();
+    private int currentCategoryId = -1;
 
     public ListPresenter() {
         this.getCategoriesUC = new GetCategoriesUC();
@@ -35,16 +37,45 @@ public class ListPresenter extends AbstractPresenter<ListView> {
         getCategories();
     }
 
-    public void loadCategoryPost(int position){
-        getPostsCategories(currentCategories.get(position).getSlug());
+    public void loadCategoryPost(int position) {
+        if (currentCategoryId != position) {
+            if (!isViewAttache()) {
+                Log.e(TAG, "View is detach");
+                return;
+            }
+
+            getWeakReference().clearResult();
+
+            currentCategoryId = position;
+            showViewLoading();
+            getPostsCategories(currentCategories.get(position).getSlug());
+        }
     }
 
     private void getCategories() {
         getCategoriesUC.execute(new CategoriesListObserver(), null);
     }
 
-    private void getPostsCategories(String categoryName){
+    private void getPostsCategories(String categoryName) {
         getCategoryPostUC.execute(new PostsCategoriesObserver(), categoryName);
+    }
+
+    private void showViewLoading() {
+        if (!isViewAttache()) {
+            Log.e(TAG, "View is detach");
+            return;
+        }
+
+        getWeakReference().setRefreshing(true);
+    }
+
+    private void hideViewLoading() {
+        if (!isViewAttache()) {
+            Log.e(TAG, "View is detach");
+            return;
+        }
+
+        getWeakReference().setRefreshing(false);
     }
 
     private void showCategoriesSpinner(List<Category> categoryList) {
@@ -58,11 +89,12 @@ public class ListPresenter extends AbstractPresenter<ListView> {
         getWeakReference().showCategories(transformCategoryToString(categoryList));
     }
 
-    private void showPosts(List<Post> postList){
+    private void showPosts(List<Post> postList) {
         if (!isViewAttache()) {
             Log.e(TAG, "View is detach");
             return;
         }
+
 
         getWeakReference().showPostsCategories(postList);
     }
@@ -81,11 +113,10 @@ public class ListPresenter extends AbstractPresenter<ListView> {
 
         @Override
         public void onComplete() {
-
         }
     }
 
-    private final class PostsCategoriesObserver extends DisposableObserver<List<Post>>{
+    private final class PostsCategoriesObserver extends DisposableObserver<List<Post>> {
         @Override
         public void onNext(List<Post> value) {
             showPosts(value);
@@ -93,25 +124,27 @@ public class ListPresenter extends AbstractPresenter<ListView> {
 
         @Override
         public void onError(Throwable e) {
-
         }
+
 
         @Override
         public void onComplete() {
-
+            hideViewLoading();
         }
     }
 
-    public void disposeAll(){
+    public void disposeAll() {
         detacheView();
         getCategoriesUC.dispose();
+        getCategoryPostUC.dispose();
     }
 
-    private List<String> transformCategoryToString(List<Category> categoryList){
+    private List<String> transformCategoryToString(List<Category> categoryList) {
         List<String> list = new ArrayList<>();
-        for (Category c: categoryList){
+        for (Category c : categoryList) {
             list.add(c.getName());
         }
         return list;
     }
+
 }
