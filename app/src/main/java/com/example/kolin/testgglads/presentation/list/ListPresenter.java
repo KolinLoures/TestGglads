@@ -103,10 +103,12 @@ public class ListPresenter extends AbstractPresenter<ListView> {
         }
 
         @Override
-        public void onError(Throwable e) {}
+        public void onError(Throwable e) {
+        }
 
         @Override
-        public void onComplete() {}
+        public void onComplete() {
+        }
     }
 
     private final class PostsCategoriesObserver extends DisposableObserver<List<Post>> {
@@ -116,7 +118,8 @@ public class ListPresenter extends AbstractPresenter<ListView> {
         }
 
         @Override
-        public void onError(Throwable e) {}
+        public void onError(Throwable e) {
+        }
 
         @Override
         public void onComplete() {

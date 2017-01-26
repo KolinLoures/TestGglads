@@ -186,11 +186,6 @@ public class ListFragment extends Fragment implements ListView {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onDetach() {
         swipeContainer.setOnRefreshListener(null);
         spinner.setOnItemSelectedListener(null);
