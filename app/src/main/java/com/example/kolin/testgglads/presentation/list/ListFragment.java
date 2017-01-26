@@ -103,7 +103,7 @@ public class ListFragment extends Fragment implements ListView {
             @Override
             public void onRefresh() {
                 adapter.clear();
-                listPresenter.loadCategoryPost(spinner.getSelectedItemPosition());
+                listPresenter.loadCategoryPost(spinner.getSelectedItemPosition(), true);
             }
         });
 
@@ -118,7 +118,7 @@ public class ListFragment extends Fragment implements ListView {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
 //                adapter.clear();
-                listPresenter.loadCategoryPost(position);
+                listPresenter.loadCategoryPost(position, false);
             }
 
             @Override

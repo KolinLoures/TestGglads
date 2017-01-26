@@ -1,5 +1,6 @@
 package com.example.kolin.testgglads.presentation;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +16,11 @@ import com.example.kolin.testgglads.domain.model.Post;
 import com.example.kolin.testgglads.presentation.detail.DetailFragment;
 import com.example.kolin.testgglads.presentation.list.ListFragment;
 import com.example.kolin.testgglads.presentation.list.ListPresenter;
+import com.example.kolin.testgglads.presentation.webview.WebViewActivity;
 
-public class MainActivity extends AppCompatActivity
-        implements ListFragment.OnInteractionListFragmentListener{
+public class MainActivity extends AppCompatActivity implements
+        ListFragment.OnInteractionListFragmentListener,
+        DetailFragment.OnInteractDetailFragmentListener{
 
 
     private FragmentManager supportFragmentManager;
@@ -46,4 +49,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onClickGetIt(String url, String name) {
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("url", url);
+        startActivity(intent);
+    }
 }

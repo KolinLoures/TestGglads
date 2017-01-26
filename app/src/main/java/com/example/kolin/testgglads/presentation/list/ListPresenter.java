@@ -37,8 +37,8 @@ public class ListPresenter extends AbstractPresenter<ListView> {
         getCategories();
     }
 
-    public void loadCategoryPost(int position) {
-        if (currentCategoryId != position) {
+    public void loadCategoryPost(int position, boolean refresh) {
+        if (currentCategoryId != position || refresh) {
             if (!isViewAttache()) {
                 Log.e(TAG, "View is detach");
                 return;

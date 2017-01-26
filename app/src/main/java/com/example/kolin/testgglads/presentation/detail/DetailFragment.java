@@ -13,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kolin.testgglads.R;
 import com.example.kolin.testgglads.domain.model.Post;
+import com.example.kolin.testgglads.presentation.list.ListFragment;
 import com.squareup.picasso.Picasso;
 
 
@@ -26,9 +28,17 @@ public class DetailFragment extends Fragment {
     private static final String ARG_KEY = "post_key";
 
     private Post currentPost;
+
     private Toolbar toolbar;
     private TextView description;
     private TextView rating;
+    private Button btnGet;
+
+    private OnInteractDetailFragmentListener listener;
+
+    public interface OnInteractDetailFragmentListener {
+        void onClickGetIt(String url, String name);
+    }
 
     public DetailFragment() {
         // Required empty public constructor
@@ -61,6 +71,9 @@ public class DetailFragment extends Fragment {
 
         ImageView screenShot = (ImageView) view.findViewById(R.id.detail_fragment_image);
 
+        btnGet = (Button) view.findViewById(R.id.detail_btn_get_it);
+        setOnClickBtn();
+
         description = (TextView) view.findViewById(R.id.detail_text_description);
         rating = (TextView) view.findViewById(R.id.detail_text_rating);
 
@@ -79,10 +92,27 @@ public class DetailFragment extends Fragment {
         return view;
     }
 
+    private void setOnClickBtn() {
+        btnGet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null){
+                    listener.onClickGetIt(currentPost.getRedirectUrl(), currentPost.getName());
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnInteractDetailFragmentListener) {
+            listener = (OnInteractDetailFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString() +
+                    "must implement OnInteractDetailFragmentListener");
+        }
     }
 
     @Override
@@ -97,14 +127,14 @@ public class DetailFragment extends Fragment {
     }
 
 
-
     @Override
     public void onDetach() {
         ((AppCompatActivity) getActivity()).setSupportActionBar(null);
+        btnGet.setOnClickListener(null);
         super.onDetach();
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         toolbar.setTitle(currentPost.getName());
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
