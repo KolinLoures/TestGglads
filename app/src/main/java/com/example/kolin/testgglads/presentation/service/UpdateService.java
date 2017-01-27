@@ -94,11 +94,6 @@ public class UpdateService extends Service {
         getCategoryPostUC.dispose();
     }
 
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-    }
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -125,7 +120,7 @@ public class UpdateService extends Service {
                     .build();
 
         }
-        if ((value.size() - currentCount) > 1 || value.size() == currentCount) {
+        if ((value.size() - currentCount) > 1) {
             notification = new NotificationCompat.Builder(getBaseContext())
                     .setSmallIcon(R.drawable.ic_done_white_24dp)
                     .setContentTitle("ProductHunt")
