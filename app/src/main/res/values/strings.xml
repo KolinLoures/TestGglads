@@ -4,10 +4,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-
     <string name="Roboto_Medium" translatable="false">sans-serif-medium</string>
     <string name="Roboto_Regular" translatable="false">sans-serif</string>
+    <string name="Roboto_Light" translatable="false">sans-serif-light</string>
+
+
     <string name="description">Description</string>
     <string name="rating">Rating</string>
     <string name="get_it">Get it!</string>
+    <string name="can_t_load_result">Can\'t load result</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.kolin.testgglads.presentation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import com.example.kolin.testgglads.R;
 import com.example.kolin.testgglads.domain.model.Post;
 import com.example.kolin.testgglads.presentation.detail.DetailFragment;
 import com.example.kolin.testgglads.presentation.list.ListFragment;
+import com.example.kolin.testgglads.presentation.service.UpdateService;
 import com.example.kolin.testgglads.presentation.webview.WebViewActivity;
 
 import java.util.List;
@@ -32,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements
         showingFragment = ListFragment.newInstance();
 
         if (savedInstanceState != null) {
-//            showingFragment = supportFragmentManager.getFragment(savedInstanceState, ListFragment.TAG);
-
             List<Fragment> fragments = supportFragmentManager.getFragments();
             for (int i = 0; i < fragments.size(); i++){
                 if (fragments.get(i) != null){
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.main_activity_container, showingFragment)
                 .commit();
 
+        UpdateService.setServiceAlarmManager(this, true);
     }
 
     @Override
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.main_activity_container, fragment)
                 .commit();
     }
+
+
 
     @Override
     public void onClickGetIt(String url, String name) {
@@ -77,5 +80,10 @@ public class MainActivity extends AppCompatActivity implements
             if (f != null)
                 supportFragmentManager.putFragment(outState, f.getClass().getSimpleName(), f);
         }
+    }
+
+
+    public static Intent newIntent(Context context){
+        return new Intent(context, MainActivity.class);
     }
 }

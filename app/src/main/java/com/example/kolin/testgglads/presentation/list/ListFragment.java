@@ -3,8 +3,8 @@ package com.example.kolin.testgglads.presentation.list;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -16,20 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kolin.testgglads.R;
 import com.example.kolin.testgglads.domain.model.Category;
 import com.example.kolin.testgglads.domain.model.Post;
+import com.example.kolin.testgglads.presentation.service.UpdateService;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import io.reactivex.internal.util.SuppressAnimalSniffer;
 
 
 public class ListFragment extends Fragment implements ListView {
@@ -43,6 +39,7 @@ public class ListFragment extends Fragment implements ListView {
     private Toolbar toolbar;
     private Spinner spinner;
     private SwipeRefreshLayout swipeContainer;
+    private FloatingActionButton fabSubscribe;
 
     private ListPresenter listPresenter;
     private ListAdapter adapter;
@@ -50,6 +47,10 @@ public class ListFragment extends Fragment implements ListView {
 
     private OnInteractionListFragmentListener listener;
     private SpinnerCategoryAdapter arrayAdapter;
+
+    public interface OnInteractionListFragmentListener {
+        void onClick(Post post);
+    }
 
     public ListFragment() {
         // Required empty public constructor
@@ -97,6 +98,8 @@ public class ListFragment extends Fragment implements ListView {
         spinner.setAdapter(arrayAdapter);
         setSpinnerListener();
 
+        fabSubscribe = (FloatingActionButton) view.findViewById(R.id.list_fragment_fab_subscribe);
+        setupFabSubscribe();
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.list_fragment_swipe_container);
         setupSwipeContainer();
@@ -108,6 +111,35 @@ public class ListFragment extends Fragment implements ListView {
         setAdapterListener();
 
         return view;
+    }
+
+    private void setupFabSubscribe() {
+        fabSubscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Category item = (Category) spinner.getSelectedItem();
+                if (!listPresenter.isCategorySubscribed(getContext(), item.getSlug())) {
+                    listPresenter.subscribeCategory(getContext(), item.getSlug());
+                    listPresenter.setLastCountDownloadedPost(getContext(), adapter.getItemCount());
+                    if (!UpdateService.isServiceAlarmOn(getActivity())){
+                        UpdateService.setServiceAlarmManager(getActivity(), true);
+                    }
+                } else {
+                    UpdateService.setServiceAlarmManager(getActivity(), false);
+                    listPresenter.subscribeCategory(getContext(), null);
+                }
+                setImageToFab();
+            }
+        });
+    }
+
+    private void setImageToFab() {
+        Category selectedItem = (Category) spinner.getSelectedItem();
+        if (!listPresenter.isCategorySubscribed(getContext(), selectedItem.getSlug())) {
+            fabSubscribe.setImageResource(R.drawable.ic_subscribe_rss_button);
+        } else {
+            fabSubscribe.setImageResource(R.drawable.ic_done_white_24dp);
+        }
     }
 
     private void setupSwipeContainer() {
@@ -130,7 +162,14 @@ public class ListFragment extends Fragment implements ListView {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                listPresenter.loadCategoryPost(arrayAdapter.getItem(position), false);
+                Category item = arrayAdapter.getItem(position);
+                listPresenter.loadCategoryPost(item, false);
+
+                if (!listPresenter.isCategorySubscribed(getContext(), item.getSlug())) {
+                    fabSubscribe.setImageResource(R.drawable.ic_subscribe_rss_button);
+                } else {
+                    fabSubscribe.setImageResource(R.drawable.ic_done_white_24dp);
+                }
             }
 
             @Override
@@ -193,6 +232,7 @@ public class ListFragment extends Fragment implements ListView {
         recyclerView.setAdapter(null);
         adapter.setListener(null);
         listPresenter.disposeAll();
+        fabSubscribe.setOnClickListener(null);
         listener = null;
         super.onDetach();
     }
@@ -219,9 +259,6 @@ public class ListFragment extends Fragment implements ListView {
         adapter.clear();
     }
 
-    public interface OnInteractionListFragmentListener {
-        void onClick(Post post);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

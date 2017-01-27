@@ -1,5 +1,6 @@
 package com.example.kolin.testgglads.presentation.list;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.kolin.testgglads.domain.interactor.GetCategoriesUC;
@@ -7,6 +8,7 @@ import com.example.kolin.testgglads.domain.interactor.GetCategoryPostUC;
 import com.example.kolin.testgglads.domain.model.Category;
 import com.example.kolin.testgglads.domain.model.Post;
 import com.example.kolin.testgglads.presentation.AbstractPresenter;
+import com.example.kolin.testgglads.presentation.service.ServicePreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,19 @@ public class ListPresenter extends AbstractPresenter<ListView> {
     private void getPostsCategories(String categoryName) {
         getCategoryPostUC.clearObservers();
         getCategoryPostUC.execute(new PostsCategoriesObserver(), categoryName);
+    }
+
+    public boolean isCategorySubscribed(Context context, String categoryName){
+        String subscribedCategory = ServicePreferences.getSubscribedCategory(context);
+        return subscribedCategory != null && subscribedCategory.equals(categoryName);
+    }
+
+    public void subscribeCategory(Context context, String categoryName){
+        ServicePreferences.setSubscribeToCategory(context, categoryName);
+    }
+
+    public void setLastCountDownloadedPost (Context context, int count){
+        ServicePreferences.setLastResultCount(context, count);
     }
 
     private void showViewLoading() {

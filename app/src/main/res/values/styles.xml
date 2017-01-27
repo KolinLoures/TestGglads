@@ -20,4 +20,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="errorTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@string/Roboto_Light</item>
+    </style>
+
 </resources>

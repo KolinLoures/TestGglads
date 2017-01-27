@@ -1,39 +1,58 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.kolin.testgglads.presentation.list.ListFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/list_fragment_toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:fitsSystemWindows="true"
-        android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <Spinner
-            android:id="@+id/list_fragment_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-    </android.support.v7.widget.Toolbar>
-
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/list_fragment_swipe_container">
+        android:orientation="vertical"
+        >
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_recycler_view"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/list_fragment_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:fitsSystemWindows="true"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <Spinner
+                android:id="@+id/list_fragment_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
 
-</LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/list_fragment_swipe_container">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:id="@+id/list_fragment_fab_subscribe"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:fabSize="normal"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_subscribe_rss_button"/>
+
+</FrameLayout>
+
