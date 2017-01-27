@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kolin.testgglads.R;
 import com.example.kolin.testgglads.domain.model.Category;
@@ -124,6 +125,7 @@ public class ListFragment extends Fragment implements ListView {
                     if (!UpdateService.isServiceAlarmOn(getActivity())){
                         UpdateService.setServiceAlarmManager(getActivity(), true);
                     }
+                    Toast.makeText(getContext(), "Subscribe to notification", Toast.LENGTH_SHORT).show();
                 } else {
                     UpdateService.setServiceAlarmManager(getActivity(), false);
                     listPresenter.subscribeCategory(getContext(), null);
