@@ -35,7 +35,7 @@ public class UpdateService extends Service {
 
     private static final String TAG = UpdateService.class.getSimpleName();
 
-    private static final int INTERVAL = 1000 * 5;
+    private static final int INTERVAL = 1000 * 20;
     private GetCategoryPostUC getCategoryPostUC;
     private int currentCount = 0;
 
@@ -118,6 +118,7 @@ public class UpdateService extends Service {
                     .setContentIntent(pi)
                     .setAutoCancel(true)
                     .build();
+            notificationManager.notify(0, notification);
 
         }
         if ((value.size() - currentCount) > 1) {
@@ -128,9 +129,9 @@ public class UpdateService extends Service {
                     .setContentIntent(pi)
                     .setAutoCancel(true)
                     .build();
+            notificationManager.notify(0, notification);
         }
 
-        notificationManager.notify(0, notification);
         ServicePreferences.setLastResultCount(this, value.size());
     }
 
