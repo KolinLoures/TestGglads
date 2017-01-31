@@ -30,6 +30,7 @@ public abstract class AbstractUC<T, P> {
 
             if (compositeDisposable != null){
                 compositeDisposable.add(disposableObserver);
+
             }
         }
     }
